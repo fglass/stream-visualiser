@@ -10,6 +10,11 @@ class Toolbar(QToolBar):
         self._set_font_size(self.home_button)
         self.addWidget(self.home_button)
 
+        self.add_button = QToolButton()
+        self.add_button.setText("📄")
+        self._set_font_size(self.add_button)
+        self.addWidget(self.add_button)
+
         self.theme_toggle = QToolButton()
         self.theme_toggle.setText("💡")
         self._set_font_size(self.theme_toggle)

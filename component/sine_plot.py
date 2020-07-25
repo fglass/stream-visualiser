@@ -7,10 +7,10 @@ UPDATE_RATE_MS = 10
 COLOURS = ["#8be9fd", "#50fa7b", "#ffb86c", "#ff79c6", "#bd93f9", "#ff5555", "#f1fa8c"]
 
 
-class SineGraph(pg.PlotWidget):
+class SinePlot(pg.PlotItem):
 
-    def __init__(self, **kargs):
-        super().__init__(**kargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.hideButtons()
         self.setLabel("left", "Amplitude")
         self.setLabel("bottom", "Time", units="s")
@@ -22,7 +22,7 @@ class SineGraph(pg.PlotWidget):
         self.x = []
         self.time = 0
         pen = pg.mkPen(color=random.choice(COLOURS))
-        self.plot = self.plot(pen=pen)
+        self._plot = self.plot(pen=pen)
 
         self.timer = pg.QtCore.QTimer()
         self.timer.setInterval(UPDATE_RATE_MS)
@@ -32,7 +32,7 @@ class SineGraph(pg.PlotWidget):
     def _update(self):
         self.x.append(self.time)
         y = np.sin(self.x)
-        self.plot.setData(self.x, y)
+        self._plot.setData(self.x, y)
         self.time += UPDATE_RATE_MS / 1000
 
     def auto_range(self):
