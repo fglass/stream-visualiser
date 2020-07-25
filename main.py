@@ -1,53 +1,53 @@
-import numpy as np
 import pyqtgraph as pg
 import sys
-from PyQt5 import QtWidgets, QtCore
+from component.sine_graph import SineGraph
+from component.toolbar import Toolbar
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QGridLayout, QWidget, QFrame
 
-UPDATE_RATE_MS = 10
+BACKGROUND_COLOUR = "#323232"
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class Window(QWidget):
 
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+        super(Window, self).__init__(*args, **kwargs)
+        self.setWindowTitle("Stream Visualiser")
+        self.resize(1280, 720)
+        self._dark_mode = True
+
+        self.layout = QGridLayout()
+        self.setLayout(self.layout)
+
+        toolbar = Toolbar()
+        self.layout.addWidget(toolbar)
+
         pg.setConfigOption("antialias", True)  # Smooths line edges but reduces performance
-        pg.setConfigOption("background", "w")
-        pg.setConfigOption("foreground", "k")
+        pg.setConfigOption("background", BACKGROUND_COLOUR)
+        self._graph = SineGraph()
+        self.layout.addWidget(self._graph)
 
-        widget = pg.PlotWidget()
-        widget.setTitle("Stream Visualiser", size="18pt")
-        widget.setLabel("left", "Amplitude")
-        widget.setLabel("bottom", "Time", units="s")
+        toolbar.home_button.clicked.connect(self._graph.auto_range)
+        toolbar.theme_toggle.clicked.connect(self._change_theme)
 
-        widget.setLimits(xMin=0)
-        widget.setYRange(-1, 1)
-        widget.showGrid(y=True)
-        self.setCentralWidget(widget)
+    def _change_theme(self):
+        self._dark_mode = not self._dark_mode
 
-        self.x = [0]
-        self.time = 0
-        pen = pg.mkPen(color=(255, 0, 0))
-        self.plot = widget.plot(self.x, np.sin(self.x), pen=pen)
-
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(UPDATE_RATE_MS)
-        self.timer.timeout.connect(self.update)
-        self.timer.start()
-
-    def update(self):
-        self.time += UPDATE_RATE_MS / 1000
-        self.x.append(self.time)
-        y = np.sin(self.x)
-        self.plot.setData(self.x, y)
+        if self._dark_mode:
+            self.setStyleSheet(f"background-color: {BACKGROUND_COLOUR}")
+            self._graph.setBackground(BACKGROUND_COLOUR)
+        else:
+            self.setStyleSheet("background-color: white")
+            self._graph.setBackground("w")
 
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    window.resize(1280, 720)
+    app.setStyle("Fusion")
+    window = Window()
     window.show()
     sys.exit(app.exec_())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
