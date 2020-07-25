@@ -1,7 +1,8 @@
 import pyqtgraph as pg
 import sys
-from component.sine_plot import SinePlot
+from component.plot import Plot
 from component.toolbar import Toolbar
+from data.sine_data_source import SineDataSource
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QWidget, QMainWindow
 
@@ -19,18 +20,17 @@ class Window(QMainWindow):
         self._dark_mode = True
         self.resize(1280, 720)
 
-        self._frame = QWidget()
-        self.setCentralWidget(self._frame)
+        self._container = QWidget()
         self._layout = QGridLayout()
-        self._frame.setLayout(self._layout)
+        self._container.setLayout(self._layout)
+        self.setCentralWidget(self._container)
 
         toolbar = Toolbar()
         self._layout.addWidget(toolbar)
 
         pg.setConfigOption("antialias", True)  # Smooths line edges but reduces performance
-        pg.setConfigOption("background", BACKGROUND_COLOUR)
-
         self._canvas = pg.GraphicsLayoutWidget()
+        self._canvas.setBackground(BACKGROUND_COLOUR)
         self._layout.addWidget(self._canvas)
 
         self._plots = []
@@ -41,7 +41,8 @@ class Window(QMainWindow):
         toolbar.theme_toggle.clicked.connect(self._change_theme)
 
     def _add_plot(self):
-        new_plot = SinePlot()
+        data_source = SineDataSource()
+        new_plot = Plot(data_source)
         self._canvas.addItem(new_plot, row=len(self._plots), col=0)
         self._plots.append(new_plot)
 
