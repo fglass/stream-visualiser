@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QToolBar, QToolButton
+from PyQt5.QtWidgets import QToolBar, QToolButton, QMenu
 
 
 class Toolbar(QToolBar):
@@ -14,6 +14,11 @@ class Toolbar(QToolBar):
         self.add_button.setText("📄")
         self._set_font_size(self.add_button)
         self.addWidget(self.add_button)
+
+        menu = QMenu()
+        menu.addAction("Sine Wave")
+        self.add_button.setMenu(menu)
+        self.add_button.setPopupMode(QToolButton.InstantPopup)
 
         self.theme_toggle = QToolButton()
         self.theme_toggle.setText("💡")

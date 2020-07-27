@@ -36,8 +36,8 @@ class Window(QMainWindow):
         self._plots = []
         self._add_plot()
 
+        toolbar.add_button.menu().triggered.connect(self._add_plot)
         toolbar.home_button.clicked.connect(self._auto_range)
-        toolbar.add_button.clicked.connect(self._add_plot)
         toolbar.theme_toggle.clicked.connect(self._change_theme)
 
     def _add_plot(self):
