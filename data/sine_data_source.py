@@ -1,6 +1,5 @@
 import numpy as np
 from pyqtgraph.graphicsItems import PlotDataItem
-
 from .data_source import DataSource
 
 UPDATE_RATE_MS = 10

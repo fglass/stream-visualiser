@@ -17,6 +17,7 @@ class Toolbar(QToolBar):
 
         menu = QMenu()
         menu.addAction("Sine Wave")
+        menu.addAction("Aim Smoothing Example")
         self.add_button.setMenu(menu)
         self.add_button.setPopupMode(QToolButton.InstantPopup)
 

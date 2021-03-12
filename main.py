@@ -2,9 +2,10 @@ import pyqtgraph as pg
 import sys
 from component.plot import Plot
 from component.toolbar import Toolbar
+from data.aim_smoothing_example_data_source import AimSmoothingExampleDataSource
 from data.sine_data_source import SineDataSource
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QGridLayout, QWidget, QMainWindow
+from PyQt5.QtWidgets import QGridLayout, QWidget, QMainWindow, QAction
 
 BACKGROUND_COLOUR = "#323232"
 DARK_STYLESHEET = "QMainWindow { background-color: %s } QToolBar { background-color: #232323 }" % BACKGROUND_COLOUR
@@ -34,14 +35,13 @@ class Window(QMainWindow):
         self._layout.addWidget(self._canvas)
 
         self._plots = []
-        self._add_plot()
 
-        toolbar.add_button.menu().triggered.connect(self._add_plot)
         toolbar.home_button.clicked.connect(self._auto_range)
+        toolbar.add_button.menu().triggered.connect(self._add_plot)
         toolbar.theme_toggle.clicked.connect(self._change_theme)
 
-    def _add_plot(self):
-        data_source = SineDataSource()
+    def _add_plot(self, action: QAction):
+        data_source = SineDataSource() if action.text() == "Sine Wave" else AimSmoothingExampleDataSource()
         new_plot = Plot(data_source)
         self._canvas.addItem(new_plot, row=len(self._plots), col=0)
         self._plots.append(new_plot)
